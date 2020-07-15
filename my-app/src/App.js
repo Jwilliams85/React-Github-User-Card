@@ -3,13 +3,14 @@ import axios from "axios";
 import Form from "./components/Form"
 import UserCard from "./components/UserCard"
 import FollowerCard from "./components/FollowerCard"
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 // import "./styles.css";
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      userName: "JWilliams85",
+      profileName: "JWilliams85",
       userData: [],
       followers: [],
       
@@ -17,7 +18,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`https://api.github.com/users/${this.state.userName}`).then(response => {
+    axios.get(`https://api.github.com/users/${this.state.profileName}`).then(response => {
      
       this.setState({
         userData: response.data
@@ -27,15 +28,15 @@ class App extends React.Component {
   }
 
 
-  handleChange = event => {
-    this.setState({
-      userName: event.target.value
-    });
-  };
+  // handleChange = event => {
+  //   this.setState({
+  //     profileName: event.target.value
+  //   });
+  // };
 
   componentDidUpdate(prevProps, prevState) {
 
-    if (this.state.userName !== this.state.userName) {
+    if (this.state.profileName !== this.state.profileName) {
       this.setState({
           userData: []
       });
@@ -43,7 +44,7 @@ class App extends React.Component {
     
   
     axios
-      .get(`https://api.github.com/users/${this.state.userName}/followers`)
+      .get(`https://api.github.com/users/${this.state.profileName}/followers`)
       .then(res => {
         this.setState({ followers: res.data});
       });
@@ -54,27 +55,32 @@ class App extends React.Component {
   searchUser = (e, text) => {
     e.preventDefault()
     this.setState({
-      userName:[text]
+      profileName:[text]
     })
   }
   render() {
     return (
       <div className="App">
-        
+        <Router>
         <h1>Github User Info</h1>
         <Form searchUser={this.searchUser}></Form>
-        <h2>User</h2>
+        <Link to= '/UserCard'>
+        <h2>Users</h2>
+        </Link>
         <div className = "cards">
+          <Route exact path = '/UserCard'>
           <UserCard userData={this.state.userData} followers={this.state.followers}></UserCard>
+          </Route>
         </div>
-        <h2>Followers</h2>
+        {/* <h2>Followers</h2> */}
         <div className="cards">
           {this.state.followers.map((item, index) => {
-            return (<FollowerCard key = {index} userData={item} followers ={[]}></FollowerCard>)
+            return <Route exact path= '/UserCard'>(<FollowerCard key = {index} userData={item} followers ={[]}></FollowerCard>)
+           </Route>
           }
           )}
         </div>
-       
+        </Router>
       </div>
     );
   }

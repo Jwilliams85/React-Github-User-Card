@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {  Link } from 'react-router-dom'
 class Form extends React.Component
 {
     constructor(props)
@@ -32,8 +32,9 @@ class Form extends React.Component
                     onChange={this.handleChange}
                     placeholder="UserName"
                     value={this.state.text}/>
+                    {/* <Link to = '/UserCard'> */}
                     <button onClick ={this.handleSubmit}>Find User</button>
-
+                    {/* </Link> */}
                     <br></br>
                     <br></br>
                 </form>
