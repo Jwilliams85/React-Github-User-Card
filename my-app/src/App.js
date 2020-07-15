@@ -1,5 +1,8 @@
 import React from "react";
 import axios from "axios";
+import Form from "./components/Form"
+import UserCard from "./components/UserCard"
+import FollowerCard from "./components/FollowerCard"
 // import "./styles.css";
 
 class App extends React.Component {
@@ -38,37 +41,40 @@ class App extends React.Component {
       });
     }
     
-  fetchFollowers = event => {
-    event.preventDefault();
+  
     axios
       .get(`https://api.github.com/users/${this.state.userName}/followers`)
       .then(res => {
         this.setState({ followers: res.data});
       });
-  };
+  
 
+  
+  }
   searchUser = (e, text) => {
     e.preventDefault()
     this.setState({
       userName:[text]
     })
   }
-  }
   render() {
     return (
       <div className="App">
+        
         <h1>Github User Info</h1>
-        <input
-          type="text"
-          value={this.login}
-          onChange={this.handleChange}
-        />
-        <button onClick={this.fetchFollowers}>People Cards</button>
-        <div className="cards">
-          {this.state.cards.map(card => (
-            <img width="200" src={card} key={card} alt={card} />
-          ))}
+        <Form searchUser={this.searchUser}></Form>
+        <h2>User</h2>
+        <div className = "cards">
+          <UserCard userData={this.state.userData} followers={this.state.followers}></UserCard>
         </div>
+        <h2>Followers</h2>
+        <div className="cards">
+          {this.state.followers.map((item, index) => {
+            return (<FollowerCard key = {index} userData={item} followers ={[]}></FollowerCard>)
+          }
+          )}
+        </div>
+       
       </div>
     );
   }
